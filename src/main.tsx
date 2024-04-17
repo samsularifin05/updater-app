@@ -6,7 +6,7 @@ import "@fortawesome/fontawesome-free/css/all.min.css";
 import { HookProvider } from "./hook/index.tsx";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
-  <BrowserRouter basename="/update-app">
+  <BrowserRouter basename="/updater-app">
     <HookProvider>
       <App />
     </HookProvider>
