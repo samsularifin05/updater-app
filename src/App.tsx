@@ -24,7 +24,7 @@ const App = () => {
           <Route path="detail/:id" element={<DetailApp />} />
         </Routes>
       </div>
-      <Toaster position="top-center" reverseOrder={false} />
+      <Toaster position="bottom-center" reverseOrder={false} />
     </div>
   );
 };

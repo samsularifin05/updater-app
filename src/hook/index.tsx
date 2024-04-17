@@ -4,6 +4,8 @@ import { createContext, useContext, useState, ReactNode } from "react";
 interface hooksStateValue {
   fullScreen: boolean;
   setFullScreen: React.Dispatch<React.SetStateAction<boolean>>;
+  isLoading: boolean;
+  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const hooksState = createContext<hooksStateValue | undefined>(undefined);
@@ -12,12 +14,15 @@ export const HookProvider: React.FC<{ children: ReactNode }> = ({
   children
 }) => {
   const [fullScreen, setFullScreen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   return (
     <hooksState.Provider
       value={{
         fullScreen,
-        setFullScreen
+        setFullScreen,
+        isLoading,
+        setIsLoading
       }}
     >
       {children}
