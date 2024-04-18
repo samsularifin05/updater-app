@@ -12,12 +12,14 @@ const ListApp = () => {
   }, []);
 
   const [listApp, setlistApp] = useState<string[]>([]);
+  const [dataTmp, setDataTmp] = useState<string[]>([]);
   const navigate = useNavigate();
 
   const getDataListApp = async () => {
     try {
       const response = await Axios.get(VITE_APP_REACT_URL + "/app");
       setlistApp(response.data.names);
+      setDataTmp(response.data.names);
     } catch (error) {
       setlistApp(["Nagagold", "GK"]);
       console.log(error);
@@ -37,16 +39,27 @@ const ListApp = () => {
     // navigate("/detail/" + list);
   };
 
+  const filterApp = (value: string) => {
+    const regex = new RegExp(`${value}`, "i");
+    if (value === "") {
+      setDataTmp(listApp);
+    } else {
+      const result = listApp.filter((list) => regex.test(list));
+      setDataTmp(result);
+    }
+  };
+
   return (
     <div className="flex flex-col gap-2 p-4">
       <h1> List App </h1>
       <input
         className="outline-none border-2 p-1 rounded-full px-4 border-gray-300  focus:border-[#178DF9]"
         placeholder="Cari App"
+        onChange={(e) => filterApp(e.target.value)}
       />
 
       <div className="flex flex-col gap-3 mt-4">
-        {listApp.map((list, index) => (
+        {dataTmp.map((list, index) => (
           <div
             key={index}
             onClick={() => detailApp(list)}
