@@ -4,16 +4,25 @@ import Axios from "axios";
 
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { VITE_APP_REACT_URL } from "../helpers";
+import { VITE_APP_REACT_URL, getItem } from "../helpers";
 
 const ListApp = () => {
   useEffect(() => {
     getDataListApp();
   }, []);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const data = getItem("isLogin");
+    if (data) {
+      navigate("/home");
+    } else {
+      navigate("/");
+    }
+  }, [navigate]);
 
   const [listApp, setlistApp] = useState<string[]>([]);
   const [dataTmp, setDataTmp] = useState<string[]>([]);
-  const navigate = useNavigate();
 
   const getDataListApp = async () => {
     try {
@@ -48,6 +57,11 @@ const ListApp = () => {
       setDataTmp(result);
     }
   };
+  const [openIndex, setOpenIndex] = useState(-1);
+
+  const toggleAccordion = (index: number) => {
+    setOpenIndex(index === openIndex ? -1 : index);
+  };
 
   return (
     <div className="flex flex-col gap-2 p-4">
@@ -59,13 +73,35 @@ const ListApp = () => {
       />
 
       <div className="flex flex-col gap-3 mt-4">
-        {dataTmp.map((list, index) => (
-          <div
-            key={index}
-            onClick={() => detailApp(list)}
-            className="flex w-full border-2 rounded p-2 hover:border-[#178DF9] cursor-pointer"
-          >
-            {list}
+        {dataTmp.map((item, index) => (
+          <div key={index}>
+            <div
+              onClick={() => toggleAccordion(index)}
+              className="flex items-center justify-between w-full p-2 border-2 rounded cursor-pointer"
+            >
+              <p>{item}</p>
+              {openIndex === index ? (
+                <i className="fa-solid fa-circle-chevron-down text-[#141E46]"></i>
+              ) : (
+                <i className="fa-solid fa-circle-chevron-right text-[#141E46]"></i>
+              )}
+            </div>
+            {openIndex === index && (
+              <div className="flex gap-2 p-2 border border-gray-200 rounded h-30">
+                <button
+                  onClick={() => detailApp(item)}
+                  className="bg-[#141E46] w-full rounded text-white"
+                >
+                  {" "}
+                  Update{" "}
+                </button>
+
+                <button className="bg-[#41B06E] w-full rounded  text-white">
+                  {" "}
+                  Link Qc{" "}
+                </button>
+              </div>
+            )}
           </div>
         ))}
       </div>

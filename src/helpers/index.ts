@@ -19,3 +19,21 @@ export function getCookie(cname: string) {
 export function setCookie(cname: string, cvalue: any) {
   document.cookie = cname + "=" + JSON.stringify(cvalue) + ";path=/";
 }
+
+export function removeCookie(): void {
+  document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const setItem = <T>(nama: string, data: T): void => {
+  localStorage.setItem(nama, JSON.stringify(data));
+};
+
+export const removeItem = (nama: string): void => {
+  localStorage.removeItem(nama);
+};
+
+export const getItem = <T>(nama: string): T | null => {
+  const item = localStorage.getItem(nama);
+  return item === null ? null : JSON.parse(item);
+};

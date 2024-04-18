@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { io } from "socket.io-client";
-import { VITE_APP_REACT_URL } from "../helpers";
+import { VITE_APP_REACT_URL, getItem } from "../helpers";
 import Axios from "axios";
 import toast from "react-hot-toast";
 import { useContextApp } from "../hook";
@@ -17,6 +17,16 @@ const DetailApp = () => {
   useEffect(() => {
     getDataWithSocket();
   }, []);
+
+  useEffect(() => {
+    const data = getItem("isLogin");
+    // console.log(data);
+    if (data) {
+      navigate("/home");
+    } else {
+      navigate("/");
+    }
+  }, [navigate]);
 
   const getDataWithSocket = () => {
     const socket = io(VITE_APP_REACT_URL.replace("/api/v1", ""));
@@ -52,7 +62,7 @@ const DetailApp = () => {
         });
         // console.log(response);
       } catch (error: any) {
-        if (error.response.data.message.includes("processed")) {
+        if (error.response.data.message?.includes("processed")) {
           toast("Sedang dalam proses update, silahkan tunggu!", {
             icon: "🧘🏾"
           });
@@ -64,25 +74,25 @@ const DetailApp = () => {
   };
 
   return (
-    <div className="terminal-container w-full h-full rounded-lg border border-gray-700 overflow-hidden">
-      <div className="terminal-header bg-gray-800 flex items-center justify-between px-4 py-2">
+    <div className="w-full h-full overflow-hidden border border-gray-700 rounded-lg terminal-container">
+      <div className="flex items-center justify-between px-4 py-2 bg-gray-800 terminal-header">
         <div
           className="flex items-center space-x-2"
           onClick={() => navigate("/home")}
         >
-          <i className="fa-solid fa-chevron-left text-white cursor-pointer"></i>
+          <i className="text-white cursor-pointer fa-solid fa-chevron-left"></i>
         </div>
-        <div className="text-sm text-white justify-center">
+        <div className="justify-center text-sm text-white">
           Terminal App {param.id}{" "}
           {isLoading && (
-            <i className="fa-solid fa-spinner fa-spin text-white absolute ml-2"></i>
+            <i className="absolute ml-2 text-white fa-solid fa-spinner fa-spin"></i>
           )}
         </div>
         <div
           className="flex items-center space-x-2 cursor-pointer"
           onClick={() => setFullScreen(!fullScreen)}
         >
-          <i className="fa-solid fa-maximize text-white"></i>
+          <i className="text-white fa-solid fa-maximize"></i>
         </div>
       </div>
       <div className="terminal-body">
@@ -90,7 +100,7 @@ const DetailApp = () => {
           <textarea
             readOnly
             id="logConsole"
-            className="p-2 terminal-input bg-black text-white focus:outline-none resize-none w-full h-screen overflow-y-auto"
+            className="w-full h-screen p-2 overflow-y-auto text-white bg-black resize-none terminal-input focus:outline-none"
           />
         </div>
       </div>

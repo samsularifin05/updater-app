@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Logo } from "../assets";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
-import { getCookie, setCookie } from "../helpers";
+import { getItem, setItem } from "../helpers";
 
 interface FormInterFace {
   username: string;
@@ -38,7 +38,7 @@ const Login = () => {
 
       setData({ ...data, loading: false });
       navigate("/home");
-      setCookie("datalogin", data);
+      setItem("isLogin", true);
     } catch (error) {
       setData({ ...data, loading: false });
     }
@@ -57,14 +57,16 @@ const Login = () => {
   };
 
   useEffect(() => {
-    const data = getCookie("datalogin");
-    if (data.username) {
+    const data = getItem("isLogin");
+    if (data) {
       navigate("/home");
+    } else {
+      navigate("/");
     }
   }, [navigate]);
 
   return (
-    <div className="flex items-center align-middle h-full p-5">
+    <div className="flex items-center h-full p-5 align-middle">
       <div className="flex flex-col w-full gap-2">
         <div className="flex justify-center mb-5">
           <img src={Logo} className="w-52" />
@@ -99,7 +101,7 @@ const Login = () => {
           {" "}
           {data.loading ? (
             <div>
-              <i className="fa-solid fa-spinner fa-spin mr-2"></i>
+              <i className="mr-2 fa-solid fa-spinner fa-spin"></i>
               Checking Data
             </div>
           ) : (
