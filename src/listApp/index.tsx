@@ -24,6 +24,19 @@ const ListApp = () => {
     }
   };
 
+  const [modal, setModal] = useState({
+    title: "",
+    isOpen: false
+  });
+
+  const detailApp = (list: string) => {
+    setModal({
+      title: list,
+      isOpen: true
+    });
+    // navigate("/detail/" + list);
+  };
+
   return (
     <div className="flex flex-col gap-2 p-4">
       <h1> List App </h1>
@@ -32,17 +45,78 @@ const ListApp = () => {
         placeholder="Cari App"
       />
 
-      <div className="flex mt-4 flex-col gap-3">
+      <div className="flex flex-col gap-3 mt-4">
         {listApp.map((list, index) => (
           <div
             key={index}
-            onClick={() => navigate("/detail/" + list)}
+            onClick={() => detailApp(list)}
             className="flex w-full border-2 rounded p-2 hover:border-[#178DF9] cursor-pointer"
           >
             {list}
           </div>
         ))}
       </div>
+      {modal.isOpen && (
+        <div
+          className={`fixed inset-0 z-50 overflow-auto bg-gray-500 bg-opacity-75 flex justify-center items-center ${
+            modal.isOpen ? "" : "hidden"
+          }`}
+        >
+          {/* Konten modal */}
+          <div className="relative max-w-md p-8 m-4 bg-white rounded-md w-80">
+            {/* Pesan konfirmasi */}
+            <div className="mb-4 text-xl font-bold">
+              Apakah anda yakin ingin update {modal.title} ?
+            </div>
+            {/* Tombol untuk mengonfirmasi atau membatalkan */}
+            <div className="flex justify-end">
+              <button
+                onClick={() =>
+                  setModal({
+                    title: "",
+                    isOpen: false
+                  })
+                }
+                className="px-4 py-2 mr-2 font-bold text-white bg-[#ee6e6e] rounded hover:bg-[#a53636]"
+              >
+                No
+              </button>
+              <button
+                onClick={() => {
+                  navigate("/detail/" + modal.title);
+                }}
+                className="px-4 py-2 font-bold text-white bg-[#78b7f1] rounded hover:bg-[#178DF9]"
+              >
+                Yes
+              </button>
+            </div>
+          </div>
+          {/* Tombol untuk menutup modal */}
+          <button
+            onClick={() => {
+              setModal({
+                title: "",
+                isOpen: false
+              });
+            }}
+            className="absolute top-0 right-0 p-2"
+          >
+            <svg
+              className="w-6 h-6 text-gray-600"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M6 18L18 6M6 6l12 12"
+              ></path>
+            </svg>
+          </button>
+        </div>
+      )}
     </div>
   );
 };
