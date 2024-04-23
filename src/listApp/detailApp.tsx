@@ -20,10 +20,7 @@ const DetailApp = () => {
 
   useEffect(() => {
     const data = getItem("isLogin");
-    // console.log(data);
-    if (data) {
-      navigate("/home");
-    } else {
+    if (!data) {
       navigate("/");
     }
   }, [navigate]);
@@ -42,8 +39,8 @@ const DetailApp = () => {
         ) as HTMLTextAreaElement;
         if (data.status === "PROGRESS") {
           dataConsole.push(data.message);
-          element.value = dataConsole.join("\n");
-          element.scrollTop = element.scrollHeight;
+          element.value = dataConsole?.join("\n");
+          element.scrollTop = element.scrollHeight + 400;
           setIsLoading(true);
         } else if (data.status === "FINISH") {
           setIsLoading(false);
@@ -51,7 +48,7 @@ const DetailApp = () => {
           dataConsole.push("\n");
           dataConsole.push("Update Finish");
           dataConsole.push("\n");
-          element.value = dataConsole.join("\n");
+          element.value = dataConsole?.join("\n");
           element.scrollTop = element.scrollHeight + 400;
         }
       });
