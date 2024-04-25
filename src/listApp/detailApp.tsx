@@ -19,6 +19,7 @@ const DetailApp = () => {
   const navigate = useNavigate();
   const { fullScreen, isLoading, setFullScreen, setIsLoading } =
     useContextApp();
+
   useEffect(() => {
     const dataConsole: string[] = [];
     const socket = io((VITE_APP_REACT_URL as string).replace("/api/v1", ""));
@@ -87,7 +88,10 @@ const DetailApp = () => {
       <div className="flex items-center justify-between px-4 py-2 bg-gray-800 terminal-header">
         <div
           className="flex items-center space-x-2"
-          onClick={() => navigate("/home")}
+          onClick={() => {
+            navigate("/home");
+            setFullScreen(false);
+          }}
         >
           <i className="text-white cursor-pointer fa-solid fa-chevron-left"></i>
         </div>
