@@ -46,7 +46,7 @@ const App = () => {
         <Routes>
           <Route index element={<Login />} />
           <Route path="home" element={<ListApp />} />
-          <Route path="detail/:id" element={<DetailApp />} />
+          <Route path="detail" element={<DetailApp />} />
           <Route
             path="*"
             element={

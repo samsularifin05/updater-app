@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { io } from "socket.io-client";
 import { VITE_APP_REACT_URL, getItem } from "../helpers";
 import Axios from "axios";
@@ -9,7 +9,12 @@ import toast from "react-hot-toast";
 import { useContextApp } from "../hook";
 
 const DetailApp = () => {
-  const param = useParams();
+  // console.log(param);
+  const searchParams = new URLSearchParams(location.search);
+  const id = searchParams.get("id");
+  const namaBranchFe = searchParams.get("namaBranchFe");
+  const namaBranchBe = searchParams.get("namaBranchBe");
+
   const navigate = useNavigate();
   const { fullScreen, setFullScreen, setIsLoading, isLoading } =
     useContextApp();
@@ -30,7 +35,7 @@ const DetailApp = () => {
     socket.connect();
     socket.on("connect", async () => {
       //   console.log(socket.id);
-      socket.emit("join-room", param.id);
+      socket.emit("join-room", id);
       const dataConsole: string[] = [];
       socket.on("update-progress", (data) => {
         // console.log(data);
@@ -54,8 +59,9 @@ const DetailApp = () => {
       });
       try {
         await Axios.post(VITE_APP_REACT_URL + "/app/update", {
-          name: param.id,
-          socketId: socket.id
+          name: id,
+          branchBe: namaBranchBe || undefined,
+          branchFe: namaBranchFe || undefined
         });
         // console.log(response);
       } catch (error: any) {
@@ -64,6 +70,9 @@ const DetailApp = () => {
             icon: "🧘🏾"
           });
           setIsLoading(true);
+        } else {
+          toast.error(error.response.data.message);
+          setIsLoading(false);
         }
         // console.log(error);
       }
@@ -80,7 +89,7 @@ const DetailApp = () => {
           <i className="text-white cursor-pointer fa-solid fa-chevron-left"></i>
         </div>
         <div className="justify-center text-sm text-white">
-          Terminal App {param.id}{" "}
+          Terminal App {id}{" "}
           {isLoading && (
             <i className="absolute ml-2 text-white fa-solid fa-spinner fa-spin"></i>
           )}

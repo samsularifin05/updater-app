@@ -1,10 +1,9 @@
-// import { ReactTerminal } from "react-terminal";
-
 import Axios from "axios";
-
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { VITE_APP_REACT_URL, getItem } from "../helpers";
+import { DataAppInterFace, ModalOption } from "../interFace";
+import Modalkonfirmasi from "./modalkonfirmasi";
 
 const ListApp = () => {
   useEffect(() => {
@@ -21,8 +20,8 @@ const ListApp = () => {
     }
   }, [navigate]);
 
-  const [listApp, setlistApp] = useState<string[]>([]);
-  const [dataTmp, setDataTmp] = useState<string[]>([]);
+  const [listApp, setlistApp] = useState<DataAppInterFace[]>([]);
+  const [dataTmp, setDataTmp] = useState<DataAppInterFace[]>([]);
 
   const getDataListApp = async () => {
     try {
@@ -30,20 +29,22 @@ const ListApp = () => {
       setlistApp(response.data.names);
       setDataTmp(response.data.names);
     } catch (error) {
-      setlistApp(["Nagagold", "GK"]);
+      setlistApp([]);
       console.log(error);
     }
   };
 
-  const [modal, setModal] = useState({
+  const [modal, setModal] = useState<ModalOption>({
     title: "",
-    isOpen: false
+    isOpen: false,
+    is_branch_avail: false
   });
 
-  const detailApp = (list: string) => {
+  const detailApp = (list: DataAppInterFace) => {
     setModal({
-      title: list,
-      isOpen: true
+      title: list.name,
+      isOpen: true,
+      is_branch_avail: list.is_branch_avail
     });
     // navigate("/detail/" + list);
   };
@@ -53,7 +54,7 @@ const ListApp = () => {
     if (value === "") {
       setDataTmp(listApp);
     } else {
-      const result = listApp.filter((list) => regex.test(list));
+      const result = listApp.filter((list) => regex.test(list.name));
       setDataTmp(result);
     }
   };
@@ -79,7 +80,7 @@ const ListApp = () => {
               onClick={() => toggleAccordion(index)}
               className="flex items-center justify-between w-full p-2 border-2 rounded cursor-pointer"
             >
-              <p>{item}</p>
+              <p>{item.name}</p>
               {openIndex === index ? (
                 <i className="fa-solid fa-circle-chevron-down text-[#141E46]"></i>
               ) : (
@@ -96,75 +97,22 @@ const ListApp = () => {
                   Update{" "}
                 </button>
 
-                <button className="bg-[#41B06E] w-full rounded  text-white">
+                <a
+                  href={item.link_qc}
+                  target="_blank"
+                  className="bg-[#41B06E] w-full rounded flex justify-center text-white"
+                >
                   {" "}
                   Link Qc{" "}
-                </button>
+                </a>
               </div>
             )}
           </div>
         ))}
       </div>
+
       {modal.isOpen && (
-        <div
-          className={`fixed inset-0 z-50 overflow-auto bg-gray-500 bg-opacity-75 flex justify-center items-center ${
-            modal.isOpen ? "" : "hidden"
-          }`}
-        >
-          {/* Konten modal */}
-          <div className="relative max-w-md p-8 m-4 bg-white rounded-md w-80">
-            {/* Pesan konfirmasi */}
-            <div className="mb-4 text-xl font-bold">
-              Apakah anda yakin ingin update {modal.title} ?
-            </div>
-            {/* Tombol untuk mengonfirmasi atau membatalkan */}
-            <div className="flex justify-end">
-              <button
-                onClick={() =>
-                  setModal({
-                    title: "",
-                    isOpen: false
-                  })
-                }
-                className="px-4 py-2 mr-2 font-bold text-white bg-[#ee6e6e] rounded hover:bg-[#a53636]"
-              >
-                No
-              </button>
-              <button
-                onClick={() => {
-                  navigate("/detail/" + modal.title);
-                }}
-                className="px-4 py-2 font-bold text-white bg-[#78b7f1] rounded hover:bg-[#178DF9]"
-              >
-                Yes
-              </button>
-            </div>
-          </div>
-          {/* Tombol untuk menutup modal */}
-          <button
-            onClick={() => {
-              setModal({
-                title: "",
-                isOpen: false
-              });
-            }}
-            className="absolute top-0 right-0 p-2"
-          >
-            <svg
-              className="w-6 h-6 text-gray-600"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M6 18L18 6M6 6l12 12"
-              ></path>
-            </svg>
-          </button>
-        </div>
+        <Modalkonfirmasi modal={modal} setModal={(data) => setModal(data)} />
       )}
     </div>
   );
