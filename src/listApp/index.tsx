@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { VITE_APP_REACT_URL, getItem } from "../helpers";
 import { DataAppInterFace, ModalOption } from "../interFace";
 import Modalkonfirmasi from "./modalkonfirmasi";
+import { Close, IcLock, Setting } from "../assets";
 
 const ListApp = () => {
   useEffect(() => {
@@ -69,15 +70,60 @@ const ListApp = () => {
     navigate(`/log${queryString}`);
   };
 
+  const [hover, setHover] = useState(false);
+  const [showOtherButton, setShowOtherButton] = useState(false);
+
+  const handleSettingClick = () => {
+    setShowOtherButton(!showOtherButton);
+  };
   return (
     <div className="flex flex-col gap-2 p-4">
       <h1> List App </h1>
-      <input
-        className="outline-none border-2 p-1 rounded-full px-4 border-gray-300  focus:border-[#178DF9]"
-        placeholder="Cari App"
-        onChange={(e) => filterApp(e.target.value)}
-      />
+      <div className="flex flex-col gap-2">
+        <input
+          className="outline-none w-full border-2 p-1 rounded-full px-4 border-gray-300  focus:border-[#178DF9]"
+          placeholder="Cari App"
+          onChange={(e) => filterApp(e.target.value)}
+        />
+      </div>
+      {/* <a
+        href="https://encryptionsupport.netlify.app/"
+        target="_blank"
+        className="bg-[#178DF9] absolute outline-none flex justify-center items-center w-full p-2 rounded-full text-[13px] text-white"
+      >
+        Go Encryption Tools
+      </a> */}
 
+      <div
+        className={`fixed bottom-0 mb-4`}
+        onMouseEnter={() => setHover(true)}
+        // onMouseLeave={() => setHover(false)}
+      >
+        {showOtherButton && (
+          <a
+            href="https://encryptionsupport.netlify.app/"
+            target="_blank"
+            onClick={handleSettingClick}
+            className={`flex items-center outline-none p-3 mb-5 transition-all justify-center h-10 font-bold text-white bg-red-500 rounded-full shadow-lg mt-4`}
+          >
+            <div className="flex flex-row items-center justify-center gap-2">
+              <img src={IcLock} className="w-5 h-5" />
+              Encryption Tools
+            </div>
+          </a>
+        )}
+        <button
+          className={`flex items-center p-3 transition-all justify-center h-10 font-bold text-white bg-blue-500 rounded-full shadow-lg w-${
+            hover ? "28" : "10"
+          } hover:bg-blue-700`}
+          onClick={handleSettingClick}
+        >
+          <div className="flex flex-row items-center justify-center gap-2">
+            <img src={showOtherButton ? Close : Setting} className="w-5 h-5" />
+            {hover && <p>{"Go"}</p>}
+          </div>
+        </button>
+      </div>
       <div className="flex flex-col gap-3 mt-4">
         {dataTmp.map((item, index) => (
           <div key={index}>
