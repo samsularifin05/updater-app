@@ -1,83 +1,22 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable react-hooks/exhaustive-deps */
-import { useEffect } from "react";
+// import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { io } from "socket.io-client";
-import { VITE_APP_REACT_URL, getItem } from "../helpers";
-import Axios from "axios";
-import toast from "react-hot-toast";
+// import { getItem } from "../helpers";
 import { useContextApp } from "../hook";
+import useSocket from "./socket";
 
 const DetailApp = () => {
   // console.log(param);
   const searchParams = new URLSearchParams(location.search);
-  const id = searchParams.get("id");
-  const namaBranchFe = searchParams.get("namaBranchFe");
-  const namaBranchBe = searchParams.get("namaBranchBe");
+  const id = searchParams.get("id") || "";
+  const namaBranchFe = searchParams.get("namaBranchFe") || "";
+  const namaBranchBe = searchParams.get("namaBranchBe") || "";
+
+  // let socket: Socket;
 
   const navigate = useNavigate();
-  const { fullScreen, setFullScreen, setIsLoading, isLoading } =
-    useContextApp();
-
-  useEffect(() => {
-    getDataWithSocket();
-  }, []);
-
-  useEffect(() => {
-    const data = getItem("isLogin");
-    if (!data) {
-      navigate("/");
-    }
-  }, [navigate]);
-
-  const getDataWithSocket = () => {
-    const socket = io(VITE_APP_REACT_URL.replace("/api/v1", ""));
-    socket.connect();
-    socket.on("connect", async () => {
-      //   console.log(socket.id);
-      socket.emit("join-room", id);
-      const dataConsole: string[] = [];
-      socket.on("update-progress", (data) => {
-        // console.log(data);
-        const element = document.getElementById(
-          "logConsole"
-        ) as HTMLTextAreaElement;
-        if (data.status === "PROGRESS") {
-          dataConsole.push(data.message);
-          element.value = dataConsole?.join("\n");
-          element.scrollTop = element.scrollHeight + 400;
-          setIsLoading(true);
-        } else if (data.status === "FINISH") {
-          setIsLoading(false);
-          toast.success("Update Finish");
-          dataConsole.push("\n");
-          dataConsole.push("Update Finish");
-          dataConsole.push("\n");
-          element.value = dataConsole?.join("\n");
-          element.scrollTop = element.scrollHeight + 400;
-        }
-      });
-      try {
-        await Axios.post(VITE_APP_REACT_URL + "/app/update", {
-          name: id,
-          branchBe: namaBranchBe || undefined,
-          branchFe: namaBranchFe || undefined
-        });
-        // console.log(response);
-      } catch (error: any) {
-        if (error.response.data.message?.includes("processed")) {
-          toast("Sedang dalam proses update, silahkan tunggu!", {
-            icon: "🧘🏾"
-          });
-          setIsLoading(true);
-        } else {
-          toast.error(error.response.data.message);
-          setIsLoading(false);
-        }
-        // console.log(error);
-      }
-    });
-  };
+  const { fullScreen, setFullScreen } = useContextApp();
+  const { isLoading } = useSocket(id, namaBranchBe, namaBranchFe);
 
   return (
     <div className="w-full h-full overflow-hidden border border-gray-700 rounded-lg terminal-container">
