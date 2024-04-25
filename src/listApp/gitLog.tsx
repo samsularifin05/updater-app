@@ -10,7 +10,7 @@ import { io } from "socket.io-client";
 import toast from "react-hot-toast";
 import { SocketData } from "../interFace";
 
-const DetailApp = () => {
+const GitLog = () => {
   const searchParams = new URLSearchParams(location.search);
   const id = searchParams.get("id") || "";
   const namaBranchFe = searchParams.get("namaBranchFe") || "";
@@ -26,25 +26,25 @@ const DetailApp = () => {
 
     socket.on("connect", () => {
       socket.emit("join-room", id);
-      socket.on("update-progress", (data: SocketData) => {
+      socket.on("git-log", (data: SocketData) => {
         const element = document.getElementById(
-          "logConsole"
+          "logGit"
         ) as HTMLTextAreaElement;
 
         if (element) {
           if (data.status === "PROGRESS") {
             dataConsole.push(data.message);
             element.value = dataConsole.join("\n");
-            element.scrollTop = element.scrollHeight + 400;
+            element.scrollTop = 0;
             setIsLoading(true);
           } else if (data.status === "FINISH") {
             setIsLoading(false);
-            toast.success("Update Finish");
+            // toast.success("Update Finish");
             dataConsole.push("\n");
-            dataConsole.push("Update Finish");
+            // dataConsole.push("Update Finish");
             dataConsole.push("\n");
             element.value = dataConsole.join("\n");
-            element.scrollTop = element.scrollHeight + 400;
+            element.scrollTop = 0;
           }
         }
       });
@@ -52,10 +52,8 @@ const DetailApp = () => {
 
     setTimeout(async () => {
       try {
-        await Axios.post((VITE_APP_REACT_URL as string) + "/app/update", {
-          name: id,
-          branchBe: namaBranchBe || undefined,
-          branchFe: namaBranchFe || undefined
+        await Axios.post((VITE_APP_REACT_URL as string) + "/app/git-log", {
+          name: id
         });
       } catch (error: any) {
         if (error.response.data.message?.includes("processed")) {
@@ -92,7 +90,7 @@ const DetailApp = () => {
           <i className="text-white cursor-pointer fa-solid fa-chevron-left"></i>
         </div>
         <div className="justify-center text-sm text-white">
-          Terminal App {id}{" "}
+          Git Log App {id}{" "}
           {isLoading && (
             <i className="absolute ml-2 text-white fa-solid fa-spinner fa-spin"></i>
           )}
@@ -108,7 +106,7 @@ const DetailApp = () => {
         <div className="terminal-line">
           <textarea
             readOnly
-            id="logConsole"
+            id="logGit"
             className="w-full h-screen p-2 overflow-y-auto text-white bg-black resize-none terminal-input focus:outline-none"
           />
         </div>
@@ -117,4 +115,4 @@ const DetailApp = () => {
   );
 };
 
-export default DetailApp;
+export default GitLog;

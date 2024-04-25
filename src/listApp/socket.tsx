@@ -43,7 +43,6 @@ const useSocket = (id: string, namaBranchBe: string, namaBranchFe: string) => {
             element.scrollTop = element.scrollHeight + 400;
           }
         }
-        // handleUpdateProgress(data);
       });
     });
 

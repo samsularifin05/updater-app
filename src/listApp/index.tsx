@@ -64,6 +64,11 @@ const ListApp = () => {
     setOpenIndex(index === openIndex ? -1 : index);
   };
 
+  const goToGitLog = (row: DataAppInterFace) => {
+    const queryString = `?id=${row.name}`;
+    navigate(`/log${queryString}`);
+  };
+
   return (
     <div className="flex flex-col gap-2 p-4">
       <h1> List App </h1>
@@ -94,7 +99,14 @@ const ListApp = () => {
                   className="bg-[#141E46] w-full rounded text-white"
                 >
                   {" "}
-                  Update{" "}
+                  Update App
+                </button>
+                <button
+                  onClick={() => goToGitLog(item)}
+                  className="bg-[#304cba] w-full rounded text-white"
+                >
+                  {" "}
+                  Git Log{" "}
                 </button>
 
                 <a

@@ -9,3 +9,7 @@ export interface ModalOption {
   isOpen: boolean;
   is_branch_avail: boolean;
 }
+export interface SocketData {
+  status: string;
+  message: string;
+}

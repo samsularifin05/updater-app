@@ -5,6 +5,7 @@ import { Toaster } from "react-hot-toast";
 import DetailApp from "./listApp/detailApp";
 import { useContextApp } from "./hook";
 import { useEffect, useState } from "react";
+import GitLog from "./listApp/gitLog";
 
 const App = () => {
   const { fullScreen } = useContextApp();
@@ -47,6 +48,7 @@ const App = () => {
           <Route index element={<Login />} />
           <Route path="home" element={<ListApp />} />
           <Route path="detail" element={<DetailApp />} />
+          <Route path="log" element={<GitLog />} />
           <Route
             path="*"
             element={
