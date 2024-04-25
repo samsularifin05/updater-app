@@ -1,7 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-// import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-// import { getItem } from "../helpers";
 import { useContextApp } from "../hook";
 import Axios from "axios";
 import { useEffect } from "react";
@@ -9,6 +6,7 @@ import { VITE_APP_REACT_URL } from "../helpers";
 import { io } from "socket.io-client";
 import toast from "react-hot-toast";
 import { SocketData } from "../interFace";
+import { HeaderComponent } from "../component";
 
 const GitLog = () => {
   const searchParams = new URLSearchParams(location.search);
@@ -16,9 +14,7 @@ const GitLog = () => {
   const namaBranchFe = searchParams.get("namaBranchFe") || "";
   const namaBranchBe = searchParams.get("namaBranchBe") || "";
 
-  const navigate = useNavigate();
-  const { fullScreen, isLoading, setFullScreen, setIsLoading } =
-    useContextApp();
+  const { setIsLoading } = useContextApp();
   useEffect(() => {
     const dataConsole: string[] = [];
     const socket = io((VITE_APP_REACT_URL as string).replace("/api/v1", ""));
@@ -82,26 +78,7 @@ const GitLog = () => {
 
   return (
     <div className="w-full h-full overflow-hidden border border-gray-700 rounded-lg terminal-container">
-      <div className="flex items-center justify-between px-4 py-2 bg-gray-800 terminal-header">
-        <div
-          className="flex items-center space-x-2"
-          onClick={() => navigate("/home")}
-        >
-          <i className="text-white cursor-pointer fa-solid fa-chevron-left"></i>
-        </div>
-        <div className="justify-center text-sm text-white">
-          Git Log App {id}{" "}
-          {isLoading && (
-            <i className="absolute ml-2 text-white fa-solid fa-spinner fa-spin"></i>
-          )}
-        </div>
-        <div
-          className="flex items-center space-x-2 cursor-pointer"
-          onClick={() => setFullScreen(!fullScreen)}
-        >
-          <i className="text-white fa-solid fa-maximize"></i>
-        </div>
-      </div>
+      <HeaderComponent title={`Git Log App ${id}`} />
       <div className="terminal-body">
         <div className="terminal-line">
           <textarea
