@@ -1,4 +1,4 @@
-import { Route, Routes, useNavigate } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import ListApp from "./listApp";
 import Login from "./login";
 import { Toaster } from "react-hot-toast";
@@ -33,7 +33,7 @@ const App = () => {
       window.removeEventListener("keydown", activityListener);
     };
   }, [lastActivityTime]);
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   return (
     <div className="flex justify-center">
@@ -49,7 +49,7 @@ const App = () => {
           <Route path="home" element={<ListApp />} />
           <Route path="detail" element={<DetailApp />} />
           <Route path="log" element={<GitLog />} />
-          <Route
+          {/* <Route
             path="*"
             element={
               <div className="flex flex-col items-center justify-center h-screen gap-2">
@@ -63,7 +63,7 @@ const App = () => {
                 </button>
               </div>
             }
-          />
+          /> */}
         </Routes>
       </div>
       <Toaster position="bottom-center" reverseOrder={false} />

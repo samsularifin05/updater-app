@@ -4,7 +4,8 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite --host",
+    "dev": "export SW=true && vite --host",
+    "build-local": "vite build",
     "build": "tsc && vite build && sh ./script/build-prod.sh",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
@@ -34,6 +35,9 @@
     "typescript": "^5.2.2",
     "vite": "^5.2.0",
     "vite-plugin-compression": "^0.5.1",
-    "vite-plugin-environment": "^1.1.3"
+    "vite-plugin-compression2": "^1.1.0",
+    "vite-plugin-environment": "^1.1.3",
+    "vite-plugin-html": "^3.2.2",
+    "vite-plugin-pwa": "^0.19.8"
   }
 }
